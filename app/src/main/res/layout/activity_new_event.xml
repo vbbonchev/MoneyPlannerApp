@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp" >
+
+
+    <EditText
+        android:id="@+id/eventTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:hint="Event title                 "
+        android:singleLine="true"
+        android:textSize="36sp"
+        android:theme="@style/EditTextTheme" />
+
+
+    <LinearLayout
+        android:id="@+id/startingDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/eventTitle"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="Starting on"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
+            android:id="@+id/startDateTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:ems="14"
+            android:inputType=""
+            android:onClick="setStartDate"
+            android:singleLine="true"
+            android:text="__________"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:theme="@style/EditTextTheme" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="at"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
+            android:id="@+id/startingTimeTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:background="@drawable/border"
+            android:ems="10"
+            android:inputType=""
+            android:onClick="setStartHour"
+            android:singleLine="true"
+            android:theme="@style/EditTextTheme" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/endingDate"
+        android:layout_below="@+id/startingDate"
+        android:layout_width="match_parent"
+        android:layout_marginTop="2dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="Ending on"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
+            android:id="@+id/endingDateTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:ems="10"
+            android:onClick="setEndDate"
+            android:singleLine="true"
+            android:text="__________"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:theme="@style/EditTextTheme" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:text="at"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
+            android:id="@+id/endingTimeTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:ems="10"
+            android:onClick="setEndHour"
+            android:singleLine="true"
+            android:theme="@style/EditTextTheme"
+            android:background="@drawable/border"/>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/color"
+        android:layout_below="@+id/endingDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="Color"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <Spinner
+            android:id="@+id/colorSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:ems="10"
+            android:text="//COLOR"
+            android:theme="@style/EditTextTheme"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/repeat"
+        android:layout_below="@+id/color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="Repeat"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        <Spinner
+            android:id="@+id/repeatSpinner"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/notify"
+        android:layout_below="@+id/repeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="2dp">
+
+        <CheckBox
+            android:id="@+id/notifyCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:text="Notify me" />
+        <Spinner
+            android:id="@+id/notifyTimeSpinner"
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/associatedBudget"
+        android:layout_below="@+id/notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="2dp">
+
+        <CheckBox
+            android:id="@+id/budgetCheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:text="Associated transaction" />
+
+        <EditText
+            android:id="@+id/ammountText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            android:ems="10"
+            android:hint="00.00"
+            android:inputType="numberSigned|numberDecimal"
+            android:singleLine="true"
+            android:theme="@style/EditTextTheme" />
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/showInBudget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/associatedBudget"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
+            android:text="Show on calendar"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <Switch
+            android:id="@+id/showOnCalSwitch"
+            android:checked="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/notify" />
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/DescriptionTag"
+        android:layout_below="@id/showInBudget"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Description"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <EditText
+        android:id="@+id/descriptionText"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/DescriptionTag"
+        android:inputType="textMultiLine"
+        android:background="@drawable/border"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/descriptionText"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
+        android:onClick="submitData"
+        android:text="Submit" />
+
+
+
+</RelativeLayout>
+
+

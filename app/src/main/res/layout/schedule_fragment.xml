@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/calendar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/eventsListView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/calendar1"
+        android:scrollbars="vertical"
+        />
+
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/buttonBar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_below="@+id/calendar"-->
+        <!--android:background="@drawable/border"-->
+        <!--android:padding="4dp">-->
+
+
+        <!--<Button-->
+            <!--android:id="@+id/button2"-->
+            <!--android:background="@android:color/holo_green_light"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignTop="@+id/button"-->
+            <!--android:layout_weight="0.3"-->
+            <!--android:text="@string/calendar_button_name"-->
+            <!--android:onClick="openCalendar"-->
+            <!--android:textAllCaps="false" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/button3"-->
+            <!--android:background="@android:color/holo_green_dark"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0.3"-->
+            <!--android:text="@string/schedule_button_name"-->
+            <!--android:textAllCaps="false" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/button"-->
+            <!--android:background="@android:color/holo_green_light"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="0.3"-->
+            <!--android:text="@string/budget_button_name"-->
+            <!--android:onClick="openBudget"-->
+            <!--android:textAllCaps="false" />-->
+    <!--</LinearLayout>-->
+
+
+</RelativeLayout>

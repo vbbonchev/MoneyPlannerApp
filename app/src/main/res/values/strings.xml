@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">OrganiserNewDesign</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="schedule_button_name">Schedule</string>
+    <string name="calendar_button_name">Calendar</string>
+    <string name="budget_button_name">Budget</string>
+    <string-array name="repeatCycles">
+        <item>Once</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
+    <string-array name="notifyTimeCycles">
+        <item>1 min</item>
+        <item>15 mins</item>
+        <item>1 hour</item>
+        <item>1 week</item>
+        <item>2 weeks</item>
+    </string-array>
+    <string-array name="colors">
+        <item><![CDATA[<b><font color=#1F45FC>Blue</b>]]></item>
+        <item><![CDATA[<b><font color=#F62217>Red</b>]]></item>
+        <item><![CDATA[<b><font color=#B1FB17>Green</b>]]></item>
+        <item><![CDATA[<b><font color=#666666>Gray</b>]]></item>
+        <item><![CDATA[<b><font color=#FFD801>Yellow</b>]]></item>
+    </string-array>
+
+</resources>
