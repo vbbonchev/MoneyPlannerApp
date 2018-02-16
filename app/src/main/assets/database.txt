@@ -1,0 +1,5 @@
+ happy(mia).
+ happy(vincent).
+ happy(marcellus).
+ happy(butch).
+ happy(vincent).

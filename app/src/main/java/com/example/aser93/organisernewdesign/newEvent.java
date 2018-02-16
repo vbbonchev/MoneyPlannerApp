@@ -7,12 +7,16 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.InputType;
 import android.text.Spanned;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,11 +27,29 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import gnu.prolog.database.PrologTextLoaderError;
+import gnu.prolog.term.AtomTerm;
+import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.term.Term;
+import gnu.prolog.term.VariableTerm;
+import gnu.prolog.vm.Environment;
+import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCode;
+import gnu.prolog.vm.PrologException;
 
 public class newEvent extends AppCompatActivity {
 
@@ -37,6 +59,7 @@ public class newEvent extends AppCompatActivity {
     private TextView startingDateView;
     private TextView endingDateView;
     private int year, month, day;
+    private String answer="";
 
     Button submitButton;
     EditText titleText;
@@ -55,12 +78,123 @@ public class newEvent extends AppCompatActivity {
     boolean change=false;
     String changeStartTimeString,changeEndTimeString,changeDateString,changeTitleString,changeDescriptionString;
 
+    private String readFile(String file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String         line = null;
+        StringBuilder  stringBuilder = new StringBuilder();
+        String         ls = System.getProperty("line.separator");
+
+        try {
+            while((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+                stringBuilder.append(ls);
+            }
+
+            return stringBuilder.toString();
+        } finally {
+            reader.close();
+        }
+    }
+    public void fromAssetToFile() {
+        try {
+
+            // get input stream for text
+            InputStream is = getAssets().open("database.txt");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String text=new String(buffer);
+            String fileName = "dbOnDevice.txt";
+            String textToWrite = text;
+            FileOutputStream outputStream;
+
+            outputStream = openFileOutput(fileName , Context.MODE_PRIVATE);
+            outputStream.write(textToWrite.getBytes());
+            outputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void test(){
+        Environment prologEnv=new Environment();
+        Interpreter interpreter=prologEnv.createInterpreter();
+
+
+       // fromAssetToFile();
+
+
+
+        File file = new File(getApplicationContext().getFilesDir(), "dbOnDevice.txt");
+        try {
+            String dbtext=readFile(file.toString());
+            Log.d("FILETEXT","rows from DB: " + dbtext);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // get the filename relative to the class file
+        prologEnv.ensureLoaded(AtomTerm.get(file.toString()));
+
+        List<PrologTextLoaderError> loadingErrors = prologEnv.getLoadingErrors();
+        if (loadingErrors.size() > 0) {
+            Log.d("LOADINGERRORS",loadingErrors.toString());
+            return;
+        }
+
+
+
+
+        // Run the initialization
+        prologEnv.runInitialization(interpreter);
+
+
+        VariableTerm goal=new VariableTerm("X");
+        Term[] args={goal, AtomTerm.get("pizza")};
+        CompoundTerm goalTerm = new CompoundTerm(AtomTerm.get("likes"), args);
+        try {
+            int rc = interpreter.runOnce(goalTerm);
+            if (rc == PrologCode.SUCCESS || rc == PrologCode.SUCCESS_LAST) {
+                // Create the answer
+                Pair<String, Integer> answer = new Pair<String, Integer>(null, 0);
+
+                // Get hold of the actual Terms which the variable terms point to
+                Term wholikespizza = goal.dereference();
+                 Toast.makeText(getApplicationContext(), wholikespizza.toString(), Toast.LENGTH_SHORT).show();
+
+
+            }
+        } catch (PrologException e) {
+            e.printStackTrace();
+        }
+
+
+//        String rows=mydb.getTableAsString("Transactions");
+//        Log.v("database.txt", rows);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
         getSupportActionBar().setTitle("New event");
         boolean change = getIntent().getBooleanExtra("CHANGE_EVENT",false);
+        startQuerying();
+       // test();
 
         if(change) {
             changeStartTimeString=getIntent().getStringExtra("START_TIME_STRING");
@@ -352,7 +486,7 @@ public class newEvent extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //add database events based on daily/weekly/monthly/yearly repetition
+        //add database.txt events based on daily/weekly/monthly/yearly repetition
         SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
         if(repeatSelection.equals("Once"))
         {
@@ -360,6 +494,7 @@ public class newEvent extends AppCompatActivity {
             if(ammountBox.isChecked())
                 mydb.insertTransaction("pending for: "+title , startDate,ammount,colour,notify, description,showOnCal,"1",startTime);
         }
+
 
         if(repeatSelection.equals("Daily")) {
             for(int i=0;i<500;i++) {
@@ -473,6 +608,120 @@ public class newEvent extends AppCompatActivity {
         //set up alarm
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, futureInMillis, pendingIntent);
+
+    }
+
+
+    String m_Input;
+
+    public synchronized String getInput(final String question)
+    {
+        final Context context=this;
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(question);
+                // Set up the input
+                final EditText input = new EditText(context);
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+                // Set up the buttons
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        answer = input.getText().toString();
+                        notify();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        notify();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+        try
+        {
+            wait();
+        }
+        catch (InterruptedException e)
+        {
+
+        }
+
+        return m_Input;
+    }
+
+
+
+    String showDialog(String question){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(question);
+        // Set up the input
+        final EditText input = new EditText(this);
+    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                answer = input.getText().toString();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+        return answer;
+    }
+    void startQuerying(){
+
+    String IsWeekend="Yes";
+        //showDialog("Is it a weekday? {yes/no}");
+        String timeofDay= "noon";
+                //getInput("timeofDay {morning,noon,afternoon,evening}");
+
+//    while(IsWeekend!="yes"&&IsWeekend!="no"){
+//        IsWeekend=showDialog("Is it a weekday? {yes/no}");
+//    }
+
+
+        //get environment
+        Environment prologEnv=new Environment();
+        Interpreter interpreter=prologEnv.createInterpreter();
+
+        File file = new File(getApplicationContext().getFilesDir(), "dbOnDevice.txt");
+        try {
+            String dbtext=readFile(file.toString());
+            Log.d("FILETEXT","rows from DB: " + dbtext);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // get the filename relative to the class file
+        prologEnv.ensureLoaded(AtomTerm.get(file.toString()));
+//
+//        List<PrologTextLoaderError> loadingErrors = prologEnv.getLoadingErrors();
+//        if (loadingErrors.size() > 0) {
+//            Log.d("LOADINGERRORS",loadingErrors.toString());
+//            return;
+//        }
+
+
+
 
     }
 

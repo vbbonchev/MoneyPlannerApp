@@ -287,7 +287,7 @@ public class newTransaction extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //add database events based on daily/weekly/monthly/yearly repetition
+        //add database.txt events based on daily/weekly/monthly/yearly repetition
         SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy");
         if(repeatSelection.equals("Once")) {
            if(notify.equals("1")) setUpNotification(dateOfTrans,timeOfTrans,title,description,delay);

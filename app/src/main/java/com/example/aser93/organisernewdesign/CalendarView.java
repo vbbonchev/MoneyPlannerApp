@@ -30,7 +30,9 @@ public class CalendarView extends LinearLayout
     {
         super(context);
         initControl(context);
+
     }
+
 
     /**
      * Load component XML layout

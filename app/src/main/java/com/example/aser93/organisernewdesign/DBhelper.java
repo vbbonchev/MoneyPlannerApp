@@ -277,4 +277,38 @@ class DBHelper extends SQLiteOpenHelper {
 
         return array_list;
     }
+
+    public void dumpAllEventRows() {
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from Events", null );
+
+        res.moveToFirst();
+
+        while(!res.isAfterLast()){
+            Log.v("alleventsdump", res.toString());
+        }
+
+    }
+
+    public String getTableAsString( String tableName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String tableString = String.format("Table %s:\n", tableName);
+        Cursor allRows  = db.rawQuery("SELECT * FROM " + tableName, null);
+        if (allRows.moveToFirst() ){
+            String[] columnNames = allRows.getColumnNames();
+            do {
+                for (String name: columnNames) {
+                    tableString += String.format("%s: %s\n", name,
+                            allRows.getString(allRows.getColumnIndex(name)));
+                }
+                tableString += "\n";
+
+            } while (allRows.moveToNext());
+        }
+
+        return tableString;
+    }
+
 }
