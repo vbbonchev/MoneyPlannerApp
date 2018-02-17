@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public String insertDateIntoPrologDB(Calendar cal){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
         String dateRepresentation=dateFormat.format(cal.getTime());
         String weekend;
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
@@ -49,21 +49,21 @@ public class MainActivity extends FragmentActivity {
         else weekend="weekend(no)";
 
         //m n a e
-        //...
 
-        String rowsToInsert="event(" + dateRepresentation +"m):-\n"+
+
+        String rowsToInsert="event(m" + dateRepresentation +"):-\n"+
                 //...
                 "time(morning),\n"+
                 weekend + ".\n";
-        rowsToInsert=rowsToInsert+"event(" + dateRepresentation +"n):-\n"+
+        rowsToInsert=rowsToInsert+"event(n" + dateRepresentation +"):-\n"+
                 //...
                 "time(noon),\n"+
                 weekend + ".\n";
-        rowsToInsert=rowsToInsert+"event(" + dateRepresentation +"a):-\n"+
+        rowsToInsert=rowsToInsert+"event(a" + dateRepresentation +"):-\n"+
                 //...
                 "time(afternoon),\n"+
                 weekend + ".\n";
-        rowsToInsert=rowsToInsert+"event(" + dateRepresentation +"e):-\n"+
+        rowsToInsert=rowsToInsert+"event(e" + dateRepresentation +"):-\n"+
                 //...
                 "time(evening),\n"+
                 weekend + ".\n";
@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity {
 
     public void generatePrologDb(){
         String fullDbAsString="";
-        int NUM_OF_DAYS_FORWARD=90;
+        int NUM_OF_DAYS_FORWARD=14;
         Calendar rightNow=Calendar.getInstance();
         insertDateIntoPrologDB(rightNow);
         for(int i=0;i<NUM_OF_DAYS_FORWARD;i++){
@@ -112,5 +112,6 @@ public class MainActivity extends FragmentActivity {
         adapter.addFragment(new budgetFragment(),"Budget");
         viewPager.setAdapter(adapter);
     }
+
 
 }
